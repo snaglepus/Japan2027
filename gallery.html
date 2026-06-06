@@ -10,22 +10,19 @@
 <style>
   :root{
     --paper:#f7f3ec; --ink:#221d17; --ink-soft:#4f463b; --line:#ddd3c4;
-    --red:#a83b27; --indigo:#2b3a55; --gold:#a4843f; --card:#fffdf9;
-    --maxw:1140px;
+    --red:#a83b27; --indigo:#2b3a55; --gold:#a4843f; --card:#fffdf9; --maxw:1140px;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   [id]{scroll-margin-top:108px;}
-  body{
-    margin:0; background:var(--paper); color:var(--ink);
+  body{margin:0; background:var(--paper); color:var(--ink);
     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-    font-weight:300; line-height:1.65; font-size:17px; -webkit-font-smoothing:antialiased;
-  }
+    font-weight:300; line-height:1.65; font-size:17px; -webkit-font-smoothing:antialiased;}
+  body.lb-open{overflow:hidden;}
   h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif; font-weight:500; line-height:1.12; margin:0;}
   a{color:var(--red); text-decoration:none;}
   .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
 
-  /* NAV */
   nav.bar{position:sticky; top:0; z-index:50; -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px);
     background:rgba(247,243,236,.9); border-bottom:1px solid var(--line);}
   nav.bar .wrap{display:flex; align-items:center; justify-content:space-between; height:56px; gap:18px;}
@@ -35,24 +32,20 @@
   nav .back{font-size:13px; letter-spacing:.04em; color:var(--ink-soft); font-weight:500; white-space:nowrap;}
   nav .back:hover{color:var(--red);}
 
-  /* CHIP STRIP */
   .chipstrip{position:sticky; top:56px; z-index:49; background:rgba(247,243,236,.92);
-    -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px);
-    border-bottom:1px solid var(--line);}
+    -webkit-backdrop-filter:saturate(140%) blur(8px); backdrop-filter:saturate(140%) blur(8px); border-bottom:1px solid var(--line);}
   .chipstrip .wrap{display:flex; gap:9px; overflow-x:auto; padding-top:11px; padding-bottom:11px; scrollbar-width:none;}
   .chipstrip .wrap::-webkit-scrollbar{display:none;}
   .chipstrip a{flex:none; background:#fff; border:1px solid var(--line); border-radius:999px;
     padding:6px 14px; font-size:13px; color:var(--ink-soft); font-weight:500; white-space:nowrap;}
   .chipstrip a:hover{border-color:var(--indigo); color:var(--indigo);}
 
-  /* HEADER */
   header.gh{background:linear-gradient(150deg,#2b3a55,#0f1622); color:#fff; padding:56px 0 50px;}
   header.gh .kicker{font-size:12.5px; letter-spacing:.34em; text-transform:uppercase; color:#f0d9b5; margin-bottom:14px;}
   header.gh h1{font-size:clamp(40px,8vw,78px); color:#fff;}
   header.gh h1 span{font-style:italic; color:#f3dcb6;}
-  header.gh p{margin-top:14px; max-width:620px; color:#e7dcc9; font-size:clamp(15px,2vw,19px);}
+  header.gh p{margin-top:14px; max-width:640px; color:#e7dcc9; font-size:clamp(15px,2vw,19px);}
 
-  /* SECTIONS */
   section{padding:56px 0;}
   section:nth-of-type(even){background:#f2ece1;}
   .shead{display:flex; align-items:flex-end; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-bottom:26px;}
@@ -61,9 +54,8 @@
   .seein{font-size:13px; letter-spacing:.04em; color:var(--indigo); font-weight:600; border-bottom:1px solid rgba(43,58,85,.3); padding-bottom:2px; white-space:nowrap;}
   .seein:hover{color:var(--red); border-color:var(--red);}
 
-  /* GRID */
   .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px;}
-  .tile{position:relative; display:block; aspect-ratio:4/3; border-radius:12px; overflow:hidden;
+  .tile{position:relative; display:block; aspect-ratio:4/3; border-radius:12px; overflow:hidden; cursor:zoom-in;
     border:1px solid var(--line); background:linear-gradient(150deg,#cdbfa6,#8a7a5e);}
   .tile img{width:100%; height:100%; object-fit:cover; display:block; transition:transform .45s ease, opacity .3s ease;}
   .tile:hover img{transform:scale(1.06);}
@@ -72,11 +64,28 @@
   @media(max-width:640px){ .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px;} }
   @media(max-width:560px){ .wrap{padding:0 20px;} section{padding:44px 0;} }
 
-  /* FOOTER */
   footer{padding:48px 0 64px; border-top:1px solid var(--line); color:var(--ink-soft); font-size:13.5px; background:var(--paper);}
   footer .wrap{display:flex; flex-wrap:wrap; gap:18px 40px; justify-content:space-between; align-items:start;}
   footer p{max-width:640px; margin:0; line-height:1.7;}
   footer a{color:var(--indigo); font-weight:600;}
+
+  /* LIGHTBOX */
+  .lb{position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center;
+    background:rgba(12,12,16,.95); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px); cursor:zoom-out;}
+  .lb.open{display:flex;}
+  .lb img{max-width:92vw; max-height:88vh; object-fit:contain; border-radius:6px; cursor:default;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.8); opacity:0; transition:opacity .25s ease;}
+  .lb img.ready{opacity:1;}
+  .lb-cap{position:fixed; bottom:20px; left:0; right:0; text-align:center; color:#e7dcc9; font-size:13px; letter-spacing:.06em;}
+  .lb-cap b{color:#fff; font-weight:500;}
+  .lb-btn{position:fixed; background:rgba(255,255,255,.10); color:#fff; border:0; cursor:pointer;
+    width:52px; height:52px; border-radius:50%; font-size:26px; line-height:1; display:flex; align-items:center; justify-content:center;
+    transition:background .2s; -webkit-tap-highlight-color:transparent;}
+  .lb-btn:hover{background:rgba(255,255,255,.22);}
+  .lb-close{top:18px; right:18px; font-size:30px;}
+  .lb-prev{left:14px; top:50%; transform:translateY(-50%);}
+  .lb-next{right:14px; top:50%; transform:translateY(-50%);}
+  @media(max-width:560px){ .lb-btn{width:44px; height:44px; font-size:22px;} .lb-prev{left:8px;} .lb-next{right:8px;} }
 </style>
 </head>
 <body>
@@ -104,7 +113,7 @@
   <div class="wrap">
     <div class="kicker">Photo gallery &middot; winter, 30 Jan to 13 Feb 2027</div>
     <h1>The trip in <span>pictures</span></h1>
-    <p>Every stop in itinerary order, each shown the way it looks in deep winter. Ten images a place; tap any photo to open the full-size original and its source.</p>
+    <p>Every stop in itinerary order, the way it looks in deep winter. Ten images a place; tap any photo to open it full screen, then swipe or arrow through the rest.</p>
   </div>
 </header>
 
@@ -118,35 +127,35 @@
       <a class="seein" href="index.html#tokyo">See in itinerary &rarr;</a>
     </div>
     <div class="grid">
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Hama-riky%C5%AB_Garden_in_winter_-_Tokyo,_Japan_-_DSC09535.JPG" target="_blank" rel="noopener" title="Hama-rikyū Garden in winter - Tokyo, Japan - DSC09535.JPG — Daderot, CC0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Hama-rikyū Garden in winter - Tokyo, Japan - DSC09535.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09535.JPG/960px-Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09535.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1464053776319-512ea7c51202?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1464053776319-512ea7c51202?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1464053776319-512ea7c51202?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Tokyo_Tower_in_Snow_(12382858863).jpg" target="_blank" rel="noopener" title="Tokyo Tower in Snow (12382858863).jpg — Takashi Hososhima from Tokyo, Japan, CC BY-SA 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Tokyo Tower in Snow (12382858863).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Tokyo_Tower_in_Snow_%2812382858863%29.jpg/960px-Tokyo_Tower_in_Snow_%2812382858863%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1707480085905-78aa04ae9f4f?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1707480085905-78aa04ae9f4f?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1707480085905-78aa04ae9f4f?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ginza_district,_Tokyo,_during_snowfall.jpg" target="_blank" rel="noopener" title="Ginza district, Tokyo, during snowfall.jpg — Manish Prabhune, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Ginza district, Tokyo, during snowfall.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Ginza_district%2C_Tokyo%2C_during_snowfall.jpg/960px-Ginza_district%2C_Tokyo%2C_during_snowfall.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1626846136629-aa437fcb29a8?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1626846136629-aa437fcb29a8?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1626846136629-aa437fcb29a8?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Tokyo_Station,_the_snow-capped_(1)_(12520825274).jpg" target="_blank" rel="noopener" title="Tokyo Station, the snow-capped (1) (12520825274).jpg — Takayuki Suzuki from Kanagawa, Japan, CC BY-SA 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Tokyo Station, the snow-capped (1) (12520825274).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Tokyo_Station%2C_the_snow-capped_%281%29_%2812520825274%29.jpg/960px-Tokyo_Station%2C_the_snow-capped_%281%29_%2812520825274%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1707145301260-8d5c3dc9f015?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1707145301260-8d5c3dc9f015?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1707145301260-8d5c3dc9f015?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Tokyo_Station,_the_snow-capped_(2)_(12520350575).jpg" target="_blank" rel="noopener" title="Tokyo Station, the snow-capped (2) (12520350575).jpg — Takayuki Suzuki from Kanagawa, Japan, CC BY-SA 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Tokyo Station, the snow-capped (2) (12520350575).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Tokyo_Station%2C_the_snow-capped_%282%29_%2812520350575%29.jpg/960px-Tokyo_Station%2C_the_snow-capped_%282%29_%2812520350575%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1707458796823-abfa021f6071?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1707458796823-abfa021f6071?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1707458796823-abfa021f6071?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Rare_Tokyo_Snowfall_(ASTER).jpg" target="_blank" rel="noopener" title="Rare Tokyo Snowfall (ASTER).jpg — NASA/METI/AIST/Japan Space Systems, and U.S./Japan ASTER Science Team, Public domain">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Rare Tokyo Snowfall (ASTER).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Rare_Tokyo_Snowfall_%28ASTER%29.jpg/960px-Rare_Tokyo_Snowfall_%28ASTER%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1707176651899-57e65a371a1c?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1707176651899-57e65a371a1c?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1707176651899-57e65a371a1c?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Hama-riky%C5%AB_Garden_in_winter_-_Tokyo,_Japan_-_DSC09581.JPG" target="_blank" rel="noopener" title="Hama-rikyū Garden in winter - Tokyo, Japan - DSC09581.JPG — Daderot, CC0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Hama-rikyū Garden in winter - Tokyo, Japan - DSC09581.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09581.JPG/960px-Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09581.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1707147671059-94dd36708ca7?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1707147671059-94dd36708ca7?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1707147671059-94dd36708ca7?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Hama-riky%C5%AB_Garden_in_winter_-_Tokyo,_Japan_-_DSC09543.JPG" target="_blank" rel="noopener" title="Hama-rikyū Garden in winter - Tokyo, Japan - DSC09543.JPG — Daderot, CC0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Hama-rikyū Garden in winter - Tokyo, Japan - DSC09543.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09543.JPG/960px-Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09543.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1647160925996-c43976ba8f00?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1647160925996-c43976ba8f00?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1647160925996-c43976ba8f00?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Hama-riky%C5%AB_Garden_in_winter_-_Tokyo,_Japan_-_DSC09547.JPG" target="_blank" rel="noopener" title="Hama-rikyū Garden in winter - Tokyo, Japan - DSC09547.JPG — Daderot, CC0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Hama-rikyū Garden in winter - Tokyo, Japan - DSC09547.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09547.JPG/960px-Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09547.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1707458165191-f05c88467943?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1707458165191-f05c88467943?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1707458165191-f05c88467943?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Hama-riky%C5%AB_Garden_in_winter_-_Tokyo,_Japan_-_DSC09572.JPG" target="_blank" rel="noopener" title="Hama-rikyū Garden in winter - Tokyo, Japan - DSC09572.JPG — Daderot, CC0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter — Hama-rikyū Garden in winter - Tokyo, Japan - DSC09572.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09572.JPG/960px-Hama-riky%C5%AB_Garden_in_winter_-_Tokyo%2C_Japan_-_DSC09572.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1742089608697-b9f04fd767b1?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1742089608697-b9f04fd767b1?auto=format&fit=max&w=2000&q=85" data-cap="Tokyo in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Tokyo in winter" src="https://images.unsplash.com/photo-1742089608697-b9f04fd767b1?auto=format&fit=crop&w=720&q=80">
         </a>
     </div>
   </div>
@@ -162,35 +171,35 @@
       <a class="seein" href="index.html#nozawa">See in itinerary &rarr;</a>
     </div>
     <div class="grid">
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nozawa_Ski.jpg" target="_blank" rel="noopener" title="Nozawa Ski.jpg — E-190, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — Nozawa Ski.jpg" src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Nozawa_Ski.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1504850759690-1c3beb59be7c?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1504850759690-1c3beb59be7c?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1504850759690-1c3beb59be7c?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nozawa_Onsen_01.jpg" target="_blank" rel="noopener" title="Nozawa Onsen 01.jpg — Hideyuki KAMON, CC BY-SA 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — Nozawa Onsen 01.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Nozawa_Onsen_01.jpg/960px-Nozawa_Onsen_01.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1656743554998-0976eec1a9ec?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1656743554998-0976eec1a9ec?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1656743554998-0976eec1a9ec?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nozawa_Onsen_Schanze_slopecar.jpg" target="_blank" rel="noopener" title="Nozawa Onsen Schanze slopecar.jpg — ブルーノ・プラス, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — Nozawa Onsen Schanze slopecar.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Nozawa_Onsen_Schanze_slopecar.jpg/960px-Nozawa_Onsen_Schanze_slopecar.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1774304233896-62d078d03673?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1774304233896-62d078d03673?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1774304233896-62d078d03673?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nozawaski2.JPG" target="_blank" rel="noopener" title="Nozawaski2.JPG — 苗場山, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — Nozawaski2.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Nozawaski2.JPG/960px-Nozawaski2.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1646378201666-75305246fbab?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1646378201666-75305246fbab?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1646378201666-75305246fbab?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E3%83%A4%E3%83%8A%E3%82%AE%E3%83%A9%E3%83%B3%E3%82%AC%E3%83%BC%E3%83%87%E3%83%B3%E4%BB%98%E8%BF%91_20130708_-_panoramio.jpg" target="_blank" rel="noopener" title="野沢温泉スキー場ヤナギランガーデン付近 20130708 - panoramio.jpg — 690 Noda, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — 野沢温泉スキー場ヤナギランガーデン付近 20130708 - panoramio.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E3%83%A4%E3%83%8A%E3%82%AE%E3%83%A9%E3%83%B3%E3%82%AC%E3%83%BC%E3%83%87%E3%83%B3%E4%BB%98%E8%BF%91_20130708_-_panoramio.jpg/960px-%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E3%83%A4%E3%83%8A%E3%82%AE%E3%83%A9%E3%83%B3%E3%82%AC%E3%83%BC%E3%83%87%E3%83%B3%E4%BB%98%E8%BF%91_20130708_-_panoramio.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1656741381083-8ef37d388745?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1656741381083-8ef37d388745?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1656741381083-8ef37d388745?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E9%95%B7%E5%9D%82%EF%BC%8E%E5%A4%8F%E3%81%AE%E3%82%B2%E3%83%AC%E3%83%B3%E3%83%87%E7%95%91%E3%81%AB%E5%88%A9%E7%94%A8_-_panoramio.jpg" target="_blank" rel="noopener" title="野沢温泉スキー場長坂．夏のゲレンデ畑に利用 - panoramio.jpg — mapplefan8, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — 野沢温泉スキー場長坂．夏のゲレンデ畑に利用 - panoramio.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E9%95%B7%E5%9D%82%EF%BC%8E%E5%A4%8F%E3%81%AE%E3%82%B2%E3%83%AC%E3%83%B3%E3%83%87%E7%95%91%E3%81%AB%E5%88%A9%E7%94%A8_-_panoramio.jpg/960px-%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E9%95%B7%E5%9D%82%EF%BC%8E%E5%A4%8F%E3%81%AE%E3%82%B2%E3%83%AC%E3%83%B3%E3%83%87%E7%95%91%E3%81%AB%E5%88%A9%E7%94%A8_-_panoramio.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1656741266511-8a0fecd6b687?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1656741266511-8a0fecd6b687?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1656741266511-8a0fecd6b687?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E5%A4%8F%E3%81%AE%E3%82%B2%E3%83%AC%E3%83%B3%E3%83%87_-_panoramio.jpg" target="_blank" rel="noopener" title="野沢温泉スキー場夏のゲレンデ - panoramio.jpg — mapplefan8, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — 野沢温泉スキー場夏のゲレンデ - panoramio.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E5%A4%8F%E3%81%AE%E3%82%B2%E3%83%AC%E3%83%B3%E3%83%87_-_panoramio.jpg/960px-%E9%87%8E%E6%B2%A2%E6%B8%A9%E6%B3%89%E3%82%B9%E3%82%AD%E3%83%BC%E5%A0%B4%E5%A4%8F%E3%81%AE%E3%82%B2%E3%83%AC%E3%83%B3%E3%83%87_-_panoramio.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1761052877503-c76a2801ed5b?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1761052877503-c76a2801ed5b?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1761052877503-c76a2801ed5b?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nozawa.jpg" target="_blank" rel="noopener" title="Nozawa.jpg — Takkitakitaki, Public domain">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — Nozawa.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Nozawa.jpg/960px-Nozawa.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1656741300190-d61a5a13951d?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1656741300190-d61a5a13951d?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1656741300190-d61a5a13951d?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Japan_Ski_Museum_Nozawa_Onsen.jpg" target="_blank" rel="noopener" title="Japan Ski Museum Nozawa Onsen.jpg — photo: Qurren (talk) Taken with Canon PowerShot G9 X, CC BY-SA 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — Japan Ski Museum Nozawa Onsen.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Japan_Ski_Museum_Nozawa_Onsen.jpg/960px-Japan_Ski_Museum_Nozawa_Onsen.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1656741391536-432366786ea8?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1656741391536-432366786ea8?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1656741391536-432366786ea8?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg" target="_blank" rel="noopener" title="Kenashi-yama Mountain observed from Nozawa-onsen in winter.jpg — Fin 22, CC BY-SA 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter — Kenashi-yama Mountain observed from Nozawa-onsen in winter.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg/960px-Kenashi-yama_Mountain_observed_from_Nozawa-onsen_in_winter.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1622545174159-713ae5ffc9b1?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1622545174159-713ae5ffc9b1?auto=format&fit=max&w=2000&q=85" data-cap="Nozawa Onsen in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Nozawa Onsen in winter" src="https://images.unsplash.com/photo-1622545174159-713ae5ffc9b1?auto=format&fit=crop&w=720&q=80">
         </a>
     </div>
   </div>
@@ -206,35 +215,35 @@
       <a class="seein" href="index.html#kanazawa">See in itinerary &rarr;</a>
     </div>
     <div class="grid">
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Kenrokuen_in_winter_02.jpg" target="_blank" rel="noopener" title="Kenrokuen in winter 02.jpg — yosi.nakao from Japan., CC BY-SA 2.1 jp">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Kenrokuen in winter 02.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Kenrokuen_in_winter_02.jpg/960px-Kenrokuen_in_winter_02.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1610623757759-e94661873465?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1610623757759-e94661873465?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1610623757759-e94661873465?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Kenrokuen_in_winter_01.jpg" target="_blank" rel="noopener" title="Kenrokuen in winter 01.jpg — yosi.nakao from Japan., CC BY-SA 2.1 jp">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Kenrokuen in winter 01.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Kenrokuen_in_winter_01.jpg/960px-Kenrokuen_in_winter_01.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1602479185176-e48241133836?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1602479185176-e48241133836?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1602479185176-e48241133836?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Kenroku-en-winter-lantern.jpg" target="_blank" rel="noopener" title="Kenroku-en-winter-lantern.jpg — tab2_dawa, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Kenroku-en-winter-lantern.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Kenroku-en-winter-lantern.jpg/960px-Kenroku-en-winter-lantern.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1741265517562-58c190dddaff?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1741265517562-58c190dddaff?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1741265517562-58c190dddaff?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Early_January_Snow,_Kanazawa_(3).JPG" target="_blank" rel="noopener" title="Early January Snow, Kanazawa (3).JPG — User: (WT-shared) Kagaland at wts wikivoyage, CC BY-SA 1.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Early January Snow, Kanazawa (3).JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Early_January_Snow%2C_Kanazawa_%283%29.JPG/960px-Early_January_Snow%2C_Kanazawa_%283%29.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1678274927370-0b195e7f7dea?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1678274927370-0b195e7f7dea?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1678274927370-0b195e7f7dea?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:1_Kenrokumachi,_Kanazawa-shi,_Ishikawa-ken_920-0936,_Japan_-_panoramio_(1).jpg" target="_blank" rel="noopener" title="1 Kenrokumachi, Kanazawa-shi, Ishikawa-ken 920-0936, Japan - panoramio (1).jpg — kowahkin, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — 1 Kenrokumachi, Kanazawa-shi, Ishikawa-ken 920-0936, Japan - panoramio (1).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/1_Kenrokumachi%2C_Kanazawa-shi%2C_Ishikawa-ken_920-0936%2C_Japan_-_panoramio_%281%29.jpg/960px-1_Kenrokumachi%2C_Kanazawa-shi%2C_Ishikawa-ken_920-0936%2C_Japan_-_panoramio_%281%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1610623757180-f5ec7090a07f?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1610623757180-f5ec7090a07f?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1610623757180-f5ec7090a07f?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:The_American_garden_(1891)_(17960606080).jpg" target="_blank" rel="noopener" title="The American garden (1891) (17960606080).jpg — Internet Archive Book Images, No restrictions">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — The American garden (1891) (17960606080).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_American_garden_%281891%29_%2817960606080%29.jpg/960px-The_American_garden_%281891%29_%2817960606080%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1517918558653-3a2c5ab393a2?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1517918558653-3a2c5ab393a2?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1517918558653-3a2c5ab393a2?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Higashi_Chaya_district,_Kanazawa_(3810723944).jpg" target="_blank" rel="noopener" title="Higashi Chaya district, Kanazawa (3810723944).jpg — Andrea Schaffer from Sydney, Australia, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Higashi Chaya district, Kanazawa (3810723944).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Higashi_Chaya_district%2C_Kanazawa_%283810723944%29.jpg/960px-Higashi_Chaya_district%2C_Kanazawa_%283810723944%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1463962549367-83071ab2618f?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1463962549367-83071ab2618f?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1463962549367-83071ab2618f?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Higashi_Chaya_district,_Kanazawa_(3809893551).jpg" target="_blank" rel="noopener" title="Higashi Chaya district, Kanazawa (3809893551).jpg — Andrea Schaffer from Sydney, Australia, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Higashi Chaya district, Kanazawa (3809893551).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Higashi_Chaya_district%2C_Kanazawa_%283809893551%29.jpg/960px-Higashi_Chaya_district%2C_Kanazawa_%283809893551%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1610623757132-b09888060df5?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1610623757132-b09888060df5?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1610623757132-b09888060df5?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Higashi_Chaya_district,_Kanazawa_(3810715306).jpg" target="_blank" rel="noopener" title="Higashi Chaya district, Kanazawa (3810715306).jpg — Andrea Schaffer from Sydney, Australia, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Higashi Chaya district, Kanazawa (3810715306).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Higashi_Chaya_district%2C_Kanazawa_%283810715306%29.jpg/960px-Higashi_Chaya_district%2C_Kanazawa_%283810715306%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1673751243256-d744af8a4dda?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1673751243256-d744af8a4dda?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1673751243256-d744af8a4dda?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Higashi_Chaya_district,_Kanazawa_(3810698182).jpg" target="_blank" rel="noopener" title="Higashi Chaya district, Kanazawa (3810698182).jpg — Andrea Schaffer from Sydney, Australia, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter — Higashi Chaya district, Kanazawa (3810698182).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Higashi_Chaya_district%2C_Kanazawa_%283810698182%29.jpg/960px-Higashi_Chaya_district%2C_Kanazawa_%283810698182%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1673751243582-6d3d33cf136d?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1673751243582-6d3d33cf136d?auto=format&fit=max&w=2000&q=85" data-cap="Kanazawa in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kanazawa in winter" src="https://images.unsplash.com/photo-1673751243582-6d3d33cf136d?auto=format&fit=crop&w=720&q=80">
         </a>
     </div>
   </div>
@@ -250,35 +259,35 @@
       <a class="seein" href="index.html#shirakawa">See in itinerary &rarr;</a>
     </div>
     <div class="grid">
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shirakawa-go_002.jpg" target="_blank" rel="noopener" title="Shirakawa-go 002.jpg — tsuda from Tsushima, Aichi, Japan, CC BY-SA 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Shirakawa-go 002.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Shirakawa-go_002.jpg/960px-Shirakawa-go_002.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1517299553468-75a9dab327e4?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1517299553468-75a9dab327e4?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1517299553468-75a9dab327e4?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shirakawa-go_001.jpg" target="_blank" rel="noopener" title="Shirakawa-go 001.jpg — tsuda from Tsushima, Aichi, Japan, CC BY-SA 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Shirakawa-go 001.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Shirakawa-go_001.jpg/960px-Shirakawa-go_001.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1646198661649-30846f49fc91?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1646198661649-30846f49fc91?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1646198661649-30846f49fc91?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shirakawa_Go_(198622037).jpeg" target="_blank" rel="noopener" title="Shirakawa Go (198622037).jpeg — Yoshiyuki Ito, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Shirakawa Go (198622037).jpeg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Shirakawa_Go_%28198622037%29.jpeg/960px-Shirakawa_Go_%28198622037%29.jpeg">
+        <a class="tile" href="https://images.unsplash.com/photo-1644932524907-1181ea113a33?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1644932524907-1181ea113a33?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1644932524907-1181ea113a33?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Snow_in_Ogimachi_Area,_Shirakawa_village,_Gifu.JPG" target="_blank" rel="noopener" title="Snow in Ogimachi Area, Shirakawa village, Gifu.JPG — そらみみ, CC BY-SA 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Snow in Ogimachi Area, Shirakawa village, Gifu.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Snow_in_Ogimachi_Area%2C_Shirakawa_village%2C_Gifu.JPG/960px-Snow_in_Ogimachi_Area%2C_Shirakawa_village%2C_Gifu.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1709364653070-85e40204b1e1?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1709364653070-85e40204b1e1?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1709364653070-85e40204b1e1?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Snow-made_object_of_gassho_house_in_Shirakawa,_Gifu_20150121.JPG" target="_blank" rel="noopener" title="Snow-made object of gassho house in Shirakawa, Gifu 20150121.JPG — そらみみ, CC BY-SA 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Snow-made object of gassho house in Shirakawa, Gifu 20150121.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Snow-made_object_of_gassho_house_in_Shirakawa%2C_Gifu_20150121.JPG/960px-Snow-made_object_of_gassho_house_in_Shirakawa%2C_Gifu_20150121.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1646220812899-e97a7711f5e1?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1646220812899-e97a7711f5e1?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1646220812899-e97a7711f5e1?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shirakawa_Go_At_Night_(198621599).jpeg" target="_blank" rel="noopener" title="Shirakawa Go At Night (198621599).jpeg — Yoshiyuki Ito, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Shirakawa Go At Night (198621599).jpeg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Shirakawa_Go_At_Night_%28198621599%29.jpeg/960px-Shirakawa_Go_At_Night_%28198621599%29.jpeg">
+        <a class="tile" href="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Winter_@Shirakawa-g%C5%8D_,So_Beautiful,_Village_of_Shirakawa,Gifu_Prefecture,Japan_-_panoramio.jpg" target="_blank" rel="noopener" title="Winter @Shirakawa-gō ,So Beautiful, Village of Shirakawa,Gifu Prefecture,Japan - panoramio.jpg — ::::=UT=::::, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Winter @Shirakawa-gō ,So Beautiful, Village of Shirakawa,Gifu Prefecture,Japan - panoramio.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Winter_%40Shirakawa-g%C5%8D_%2CSo_Beautiful%2C_Village_of_Shirakawa%2CGifu_Prefecture%2CJapan_-_panoramio.jpg/960px-Winter_%40Shirakawa-g%C5%8D_%2CSo_Beautiful%2C_Village_of_Shirakawa%2CGifu_Prefecture%2CJapan_-_panoramio.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1645582115238-f52fe36a2b04?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1645582115238-f52fe36a2b04?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1645582115238-f52fe36a2b04?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Snow_removal_in_Hakusan_super_forest_road.jpg" target="_blank" rel="noopener" title="Snow removal in Hakusan super forest road.jpg — Alpsdake, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Snow removal in Hakusan super forest road.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Snow_removal_in_Hakusan_super_forest_road.jpg/960px-Snow_removal_in_Hakusan_super_forest_road.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1645541842639-756da85c2175?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1645541842639-756da85c2175?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1645541842639-756da85c2175?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ogi_Shirakawa-g%C5%8D,_Gifu,_Japan.jpg" target="_blank" rel="noopener" title="Ogi Shirakawa-gō, Gifu, Japan.jpg — 663highland, CC BY 2.5">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Ogi Shirakawa-gō, Gifu, Japan.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Ogi_Shirakawa-g%C5%8D%2C_Gifu%2C_Japan.jpg/960px-Ogi_Shirakawa-g%C5%8D%2C_Gifu%2C_Japan.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1702806012306-4991650ca93c?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1702806012306-4991650ca93c?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1702806012306-4991650ca93c?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shirakawa-go_houses_2.jpg" target="_blank" rel="noopener" title="Shirakawa-go houses 2.jpg — Leyo, CC BY-SA 3.0 ch">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter — Shirakawa-go houses 2.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Shirakawa-go_houses_2.jpg/960px-Shirakawa-go_houses_2.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1617284280943-1c2e6f27da3a?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1617284280943-1c2e6f27da3a?auto=format&fit=max&w=2000&q=85" data-cap="Shirakawa-go in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Shirakawa-go in winter" src="https://images.unsplash.com/photo-1617284280943-1c2e6f27da3a?auto=format&fit=crop&w=720&q=80">
         </a>
     </div>
   </div>
@@ -294,35 +303,35 @@
       <a class="seein" href="index.html#takayama">See in itinerary &rarr;</a>
     </div>
     <div class="grid">
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama%27s_Early_Winter_Welcome_(NE).jpg" target="_blank" rel="noopener" title="Takayama&#x27;s Early Winter Welcome (NE).jpg — Nickaura (Nick Sevarg), CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama&#x27;s Early Winter Welcome (NE).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Takayama%27s_Early_Winter_Welcome_%28NE%29.jpg/960px-Takayama%27s_Early_Winter_Welcome_%28NE%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1676917350107-964194678afa?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1676917350107-964194678afa?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1676917350107-964194678afa?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama,_Gifu_Prefecture;_April_2012_(08).jpg" target="_blank" rel="noopener" title="Takayama, Gifu Prefecture; April 2012 (08).jpg — ncole458, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama, Gifu Prefecture; April 2012 (08).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Takayama%2C_Gifu_Prefecture%3B_April_2012_%2808%29.jpg/960px-Takayama%2C_Gifu_Prefecture%3B_April_2012_%2808%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1764672277000-5b30f1067b99?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1764672277000-5b30f1067b99?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1764672277000-5b30f1067b99?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama_(15485428565).jpg" target="_blank" rel="noopener" title="Takayama (15485428565).jpg — Felix Filnkoessl, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama (15485428565).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Takayama_%2815485428565%29.jpg/960px-Takayama_%2815485428565%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1571422095823-fd818b4ca12e?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1571422095823-fd818b4ca12e?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1571422095823-fd818b4ca12e?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama,_Gifu_Prefecture;_April_2012_(04).jpg" target="_blank" rel="noopener" title="Takayama, Gifu Prefecture; April 2012 (04).jpg — ncole458, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama, Gifu Prefecture; April 2012 (04).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Takayama%2C_Gifu_Prefecture%3B_April_2012_%2804%29.jpg/960px-Takayama%2C_Gifu_Prefecture%3B_April_2012_%2804%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1603666979300-3e749dff8d26?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1603666979300-3e749dff8d26?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1603666979300-3e749dff8d26?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama,_Gifu_Prefecture;_April_2012_(11).jpg" target="_blank" rel="noopener" title="Takayama, Gifu Prefecture; April 2012 (11).jpg — ncole458, CC BY 2.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama, Gifu Prefecture; April 2012 (11).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Takayama%2C_Gifu_Prefecture%3B_April_2012_%2811%29.jpg/960px-Takayama%2C_Gifu_Prefecture%3B_April_2012_%2811%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1541653143400-1549ecdd51e3?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1541653143400-1549ecdd51e3?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1541653143400-1549ecdd51e3?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama_aerial_panorama.jpg" target="_blank" rel="noopener" title="Takayama aerial panorama.jpg — BobTanGo, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama aerial panorama.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Takayama_aerial_panorama.jpg/960px-Takayama_aerial_panorama.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1751004523003-a86f6a3cce4c?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1751004523003-a86f6a3cce4c?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1751004523003-a86f6a3cce4c?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama_aerial_perspective_facing_east.jpg" target="_blank" rel="noopener" title="Takayama aerial perspective facing east.jpg — BobTanGo, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama aerial perspective facing east.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Takayama_aerial_perspective_facing_east.jpg/960px-Takayama_aerial_perspective_facing_east.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1676917349771-caadd4fd1684?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1676917349771-caadd4fd1684?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1676917349771-caadd4fd1684?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Takayama_Train_and_Bus_Station_from_above.jpg" target="_blank" rel="noopener" title="Takayama Train and Bus Station from above.jpg — BobTanGo, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Takayama Train and Bus Station from above.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Takayama_Train_and_Bus_Station_from_above.jpg/960px-Takayama_Train_and_Bus_Station_from_above.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1676917349790-adde3abfbde5?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1676917349790-adde3abfbde5?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1676917349790-adde3abfbde5?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Two_men_walk_in_front_of_a_traditional_house,_Uramachi,_Takayama,_2016.jpg" target="_blank" rel="noopener" title="Two men walk in front of a traditional house, Uramachi, Takayama, 2016.jpg — DimiTalen, CC0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Two men walk in front of a traditional house, Uramachi, Takayama, 2016.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Two_men_walk_in_front_of_a_traditional_house%2C_Uramachi%2C_Takayama%2C_2016.jpg/960px-Two_men_walk_in_front_of_a_traditional_house%2C_Uramachi%2C_Takayama%2C_2016.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1675725322721-f4dbf3ce6c97?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1675725322721-f4dbf3ce6c97?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1675725322721-f4dbf3ce6c97?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Kamitakaracho_Nagakura,_Takayama,_Gifu_Prefecture_506-1302,_Japan_-_panoramio_(27).jpg" target="_blank" rel="noopener" title="Kamitakaracho Nagakura, Takayama, Gifu Prefecture 506-1302, Japan - panoramio (27).jpg — kiwa dokokano, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter — Kamitakaracho Nagakura, Takayama, Gifu Prefecture 506-1302, Japan - panoramio (27).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Kamitakaracho_Nagakura%2C_Takayama%2C_Gifu_Prefecture_506-1302%2C_Japan_-_panoramio_%2827%29.jpg/960px-Kamitakaracho_Nagakura%2C_Takayama%2C_Gifu_Prefecture_506-1302%2C_Japan_-_panoramio_%2827%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1611023614746-b60264d8fc4c?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1611023614746-b60264d8fc4c?auto=format&fit=max&w=2000&q=85" data-cap="Takayama in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Takayama in winter" src="https://images.unsplash.com/photo-1611023614746-b60264d8fc4c?auto=format&fit=crop&w=720&q=80">
         </a>
     </div>
   </div>
@@ -338,35 +347,35 @@
       <a class="seein" href="index.html#kyoto">See in itinerary &rarr;</a>
     </div>
     <div class="grid">
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ry%C5%8Dgen-in_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_01.jpg" target="_blank" rel="noopener" title="Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 01.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 01.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_01.jpg/960px-Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_01.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1678049400985-6d252f28897d?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1678049400985-6d252f28897d?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1678049400985-6d252f28897d?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ry%C5%8Dgen-in_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_12.jpg" target="_blank" rel="noopener" title="Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 12.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 12.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_12.jpg/960px-Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_12.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1739496921607-65a3159db6bd?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1739496921607-65a3159db6bd?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1739496921607-65a3159db6bd?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shinju-an_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_01.jpg" target="_blank" rel="noopener" title="Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 01.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 01.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_01.jpg/960px-Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_01.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1634998794483-1880151ebedf?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1634998794483-1880151ebedf?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1634998794483-1880151ebedf?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shinju-an_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_11.jpg" target="_blank" rel="noopener" title="Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 11.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 11.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_11.jpg/960px-Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_11.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1549143647-aaec27ba144f?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1549143647-aaec27ba144f?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1549143647-aaec27ba144f?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ry%C5%8Dgen-in_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_03.jpg" target="_blank" rel="noopener" title="Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 03.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 03.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_03.jpg/960px-Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_03.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1723969518047-40a561dfaa2f?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1723969518047-40a561dfaa2f?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1723969518047-40a561dfaa2f?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ry%C5%8Dgen-in_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_06.jpg" target="_blank" rel="noopener" title="Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 06.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 06.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_06.jpg/960px-Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_06.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1724690951258-60dd93e115e8?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1724690951258-60dd93e115e8?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1724690951258-60dd93e115e8?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ry%C5%8Dgen-in_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_04.jpg" target="_blank" rel="noopener" title="Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 04.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 04.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_04.jpg/960px-Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_04.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1713107101581-15986b45c54a?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1713107101581-15986b45c54a?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1713107101581-15986b45c54a?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shinju-an_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_09.jpg" target="_blank" rel="noopener" title="Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 09.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 09.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_09.jpg/960px-Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_09.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1678049409700-c6b7dbc64205?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1678049409700-c6b7dbc64205?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1678049409700-c6b7dbc64205?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Shinju-an_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_03.jpg" target="_blank" rel="noopener" title="Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 03.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Shinju-an Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 03.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_03.jpg/960px-Shinju-an_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_03.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1740736134568-8d2489fc52dd?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1740736134568-8d2489fc52dd?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1740736134568-8d2489fc52dd?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Ry%C5%8Dgen-in_Daitokuji_(Kyoto_Kita-Ku)_winter_snow_hdsr_S5_05.jpg" target="_blank" rel="noopener" title="Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 05.jpg — Hyppolyte de Saint-Rambert, CC BY 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter — Ryōgen-in Daitokuji (Kyoto Kita-Ku) winter snow hdsr S5 05.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_05.jpg/960px-Ry%C5%8Dgen-in_Daitokuji_%28Kyoto_Kita-Ku%29_winter_snow_hdsr_S5_05.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1675384201055-a5d68374fb7a?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1675384201055-a5d68374fb7a?auto=format&fit=max&w=2000&q=85" data-cap="Kyoto in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Kyoto in winter" src="https://images.unsplash.com/photo-1675384201055-a5d68374fb7a?auto=format&fit=crop&w=720&q=80">
         </a>
     </div>
   </div>
@@ -382,35 +391,35 @@
       <a class="seein" href="index.html#fuji">See in itinerary &rarr;</a>
     </div>
     <div class="grid">
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Lake_Kawaguchi_(Kawaguchi-ko).jpg" target="_blank" rel="noopener" title="Lake Kawaguchi (Kawaguchi-ko).jpg — ANA CARINA NOGUEIRA VASCONCELOS, CC BY-SA 4.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Lake Kawaguchi (Kawaguchi-ko).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Lake_Kawaguchi_%28Kawaguchi-ko%29.jpg/960px-Lake_Kawaguchi_%28Kawaguchi-ko%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1713346643882-7e185ef424dd?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1713346643882-7e185ef424dd?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1713346643882-7e185ef424dd?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Mount_covered_by_snow_near_Lake_Kawaguchiko.JPG" target="_blank" rel="noopener" title="Mount covered by snow near Lake Kawaguchiko.JPG — そらみみ, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Mount covered by snow near Lake Kawaguchiko.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Mount_covered_by_snow_near_Lake_Kawaguchiko.JPG/960px-Mount_covered_by_snow_near_Lake_Kawaguchiko.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1672675964297-7910da4e13e7?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1672675964297-7910da4e13e7?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1672675964297-7910da4e13e7?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Snowpack_in_Fujiyoshida,_Yamanashi_near_the_border_with_Fujikawaguchiko_Town.JPG" target="_blank" rel="noopener" title="Snowpack in Fujiyoshida, Yamanashi near the border with Fujikawaguchiko Town.JPG — そらみみ, CC BY-SA 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Snowpack in Fujiyoshida, Yamanashi near the border with Fujikawaguchiko Town.JPG" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Snowpack_in_Fujiyoshida%2C_Yamanashi_near_the_border_with_Fujikawaguchiko_Town.JPG/960px-Snowpack_in_Fujiyoshida%2C_Yamanashi_near_the_border_with_Fujikawaguchiko_Town.JPG">
+        <a class="tile" href="https://images.unsplash.com/photo-1705157555632-495e9d57bd76?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1705157555632-495e9d57bd76?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1705157555632-495e9d57bd76?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nagahama,_Fujikawaguchiko,_Minamitsuru_District,_Yamanashi_Prefecture_401-0331,_Japan_-_panoramio.jpg" target="_blank" rel="noopener" title="Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio.jpg — 運転太郎, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio.jpg/960px-Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1556032818-683e550a2c14?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1556032818-683e550a2c14?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1556032818-683e550a2c14?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nagahama,_Fujikawaguchiko,_Minamitsuru_District,_Yamanashi_Prefecture_401-0331,_Japan_-_panoramio_(8).jpg" target="_blank" rel="noopener" title="Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (8).jpg — 運転太郎, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (8).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%288%29.jpg/960px-Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%288%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1719337763939-7633d9c0eb02?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1719337763939-7633d9c0eb02?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1719337763939-7633d9c0eb02?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nagahama,_Fujikawaguchiko,_Minamitsuru_District,_Yamanashi_Prefecture_401-0331,_Japan_-_panoramio_(9).jpg" target="_blank" rel="noopener" title="Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (9).jpg — 運転太郎, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (9).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%289%29.jpg/960px-Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%289%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1736246148189-7a7f6cd8d8f0?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1736246148189-7a7f6cd8d8f0?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1736246148189-7a7f6cd8d8f0?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nagahama,_Fujikawaguchiko,_Minamitsuru_District,_Yamanashi_Prefecture_401-0331,_Japan_-_panoramio_(3).jpg" target="_blank" rel="noopener" title="Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (3).jpg — 運転太郎, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (3).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%283%29.jpg/960px-Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%283%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1618278942403-e973260cc425?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1618278942403-e973260cc425?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1618278942403-e973260cc425?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nagahama,_Fujikawaguchiko,_Minamitsuru_District,_Yamanashi_Prefecture_401-0331,_Japan_-_panoramio_(1).jpg" target="_blank" rel="noopener" title="Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (1).jpg — 運転太郎, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (1).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%281%29.jpg/960px-Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%281%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1719890153193-5b5adcb8cbd5?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1719890153193-5b5adcb8cbd5?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1719890153193-5b5adcb8cbd5?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nagahama,_Fujikawaguchiko,_Minamitsuru_District,_Yamanashi_Prefecture_401-0331,_Japan_-_panoramio_(14).jpg" target="_blank" rel="noopener" title="Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (14).jpg — 運転太郎, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (14).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%2814%29.jpg/960px-Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%2814%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1635861105962-ff85ca1ce355?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1635861105962-ff85ca1ce355?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1635861105962-ff85ca1ce355?auto=format&fit=crop&w=720&q=80">
         </a>
-        <a class="tile" href="https://commons.wikimedia.org/wiki/File:Nagahama,_Fujikawaguchiko,_Minamitsuru_District,_Yamanashi_Prefecture_401-0331,_Japan_-_panoramio_(5).jpg" target="_blank" rel="noopener" title="Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (5).jpg — 運転太郎, CC BY 3.0">
-          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter — Nagahama, Fujikawaguchiko, Minamitsuru District, Yamanashi Prefecture 401-0331, Japan - panoramio (5).jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%285%29.jpg/960px-Nagahama%2C_Fujikawaguchiko%2C_Minamitsuru_District%2C_Yamanashi_Prefecture_401-0331%2C_Japan_-_panoramio_%285%29.jpg">
+        <a class="tile" href="https://images.unsplash.com/photo-1698907058218-4f1721f54f69?auto=format&fit=max&w=2000&q=85" target="_blank" rel="noopener" data-full="https://images.unsplash.com/photo-1698907058218-4f1721f54f69?auto=format&fit=max&w=2000&q=85" data-cap="Lake Kawaguchi &amp; Mt Fuji in winter">
+          <img loading="lazy" referrerpolicy="no-referrer" alt="Lake Kawaguchi &amp; Mt Fuji in winter" src="https://images.unsplash.com/photo-1698907058218-4f1721f54f69?auto=format&fit=crop&w=720&q=80">
         </a>
     </div>
   </div>
@@ -418,19 +427,67 @@
 
 <footer>
   <div class="wrap">
-    <p>Photographs via <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>, reused under their respective free licences (CC0, CC BY, CC BY-SA). Each image links to its source page, where the photographer and exact licence are credited. Winter availability varies by town, so a few tiles show the location in another season.</p>
+    <p>A private mood board for the trip. Photography via <a href="https://unsplash.com/" target="_blank" rel="noopener">Unsplash</a>. Winter availability varies by town, so a few frames show the location in another season.</p>
     <p><a href="index.html">&larr; Back to the itinerary</a></p>
   </div>
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" aria-hidden="true" role="dialog" aria-modal="true">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous image">&#8249;</button>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next image">&#8250;</button>
+  <img id="lbImg" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
 <script>
-  // Hide any tile whose image fails to load so the grid stays clean.
-  document.querySelectorAll('.tile img').forEach(function(img){
-    img.addEventListener('error', function(){
-      var t = img.closest('.tile');
-      if(t) t.style.display = 'none';
+  (function(){
+    var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
+    var items = tiles.map(function(a){ return { full:a.dataset.full, cap:a.dataset.cap }; });
+    var lb=document.getElementById('lb'), img=document.getElementById('lbImg'),
+        cap=document.getElementById('lbCap'), i=0;
+
+    function preload(n){ if(items[n]){ var p=new Image(); p.src=items[n].full; } }
+    function show(n){
+      i=(n+items.length)%items.length;
+      img.classList.remove('ready');
+      var it=items[i];
+      img.onload=function(){ img.classList.add('ready'); };
+      img.src=it.full; img.alt=it.cap||'';
+      cap.innerHTML='<b>'+(it.cap||'')+'</b> &middot; '+(i+1)+' / '+items.length;
+      preload(i+1); preload(i-1);
+    }
+    function open(n){ show(n); lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.classList.add('lb-open'); }
+    function close(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.classList.remove('lb-open'); img.src=''; }
+
+    tiles.forEach(function(a, idx){
+      a.addEventListener('click', function(e){ e.preventDefault(); open(idx); });
     });
-  });
+    document.getElementById('lbClose').addEventListener('click', close);
+    document.getElementById('lbPrev').addEventListener('click', function(e){ e.stopPropagation(); show(i-1); });
+    document.getElementById('lbNext').addEventListener('click', function(e){ e.stopPropagation(); show(i+1); });
+    img.addEventListener('click', function(e){ e.stopPropagation(); });
+    lb.addEventListener('click', close);
+    document.addEventListener('keydown', function(e){
+      if(!lb.classList.contains('open')) return;
+      if(e.key==='Escape') close();
+      else if(e.key==='ArrowRight') show(i+1);
+      else if(e.key==='ArrowLeft') show(i-1);
+    });
+    // swipe on touch
+    var x0=null;
+    lb.addEventListener('touchstart', function(e){ x0=e.touches[0].clientX; }, {passive:true});
+    lb.addEventListener('touchend', function(e){
+      if(x0===null) return; var dx=e.changedTouches[0].clientX-x0;
+      if(Math.abs(dx)>45){ show(dx<0 ? i+1 : i-1); } x0=null;
+    }, {passive:true});
+
+    // hide any tile whose thumbnail fails
+    document.querySelectorAll('.tile img').forEach(function(t){
+      t.addEventListener('error', function(){ var p=t.closest('.tile'); if(p) p.style.display='none'; });
+    });
+  })();
 </script>
 </body>
 </html>
